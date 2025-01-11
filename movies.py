@@ -51,7 +51,7 @@ def update_movie(movies):
     movie_title = input(GREEN + 'Enter movie name: ' + ENDC)
     if movies.get(movie_title, 0) == 0:     #checks if movie exists
         print(f"{RED}Movie {movie_title} doesn't exist!{ENDC}")
-    else: 
+    else:
         new_movie_rate = float(input(GREEN + "Enter new movie rating (0-10): " + ENDC))
         movies[movie_title]["rating"] = new_movie_rate
         print(f'Movie {movie_title} successfully updated')
@@ -82,19 +82,19 @@ def search_movie(movies):
         Prints all the movies that matched the user’s query, along with the rating.
         If no movie is found, it uses fuzzy logic to suggest similar movies, using the thefuzz library
     '''
-    str = input(GREEN + "Enter part of movie name: " + ENDC)
+    name = input(GREEN + "Enter part of movie name: " + ENDC)
     count = 0
     for movie_title in list(movies.keys()):
-        if str.lower() in movie_title.lower():   # search must be case insensitive
+        if name.lower() in movie_title.lower():   # search must be case insensitive
             print(f'{movie_title}, {movies[movie_title]["rating"]}')
             count +=1
     if count == 0:
-        fuzzy_movies = process.extract(str, list(movies.keys()))
-        closest_fuzzy_movies = [result for result in fuzzy_movies if result[1] >= 60] # WE define the fuzzy matching threshold as 60%
-        if closest_fuzzy_movies == []:
-            print(f'{RED}The movie {str} does not exist.{ENDC}')
+        fuzzy_movies = process.extract(name, list(movies.keys()))
+        closest_fuzzy_movies = [result for result in fuzzy_movies if result[1] >= 60] # We define the fuzzy matching
+        if not closest_fuzzy_movies:                                                # threshold as 60%
+            print(f'{RED}The movie {name} does not exist.{ENDC}')
         else:
-            print(f'{RED}The movie {str} does not exist.{ENDC} Did you mean:')
+            print(f'{RED}The movie {name} does not exist.{ENDC} Did you mean:')
             for fuzzy_movie in closest_fuzzy_movies:
                 print(fuzzy_movie[0])   
 
@@ -146,6 +146,16 @@ def create_histogram(movies):
     plt.show()      # we can comment out this line, if we don't want to display the histogram
     plt.close
 
+def input_validation(num):
+  while True:
+    try:
+        num = int(num)
+    except ValueError:
+        num = input(f"{GREEN}'{num}'{RED} is not a Number. Please enter a Number (0 to 10): {ENDC}")
+    else:
+        return num
+
+
 def main():
       # Dictionary of Dictionaries to store the movies and their properties
     movies = {
@@ -191,20 +201,22 @@ def main():
         }
     }
     print(MAGENTA + '\033[4m' + '********** My Movies Database **********\n' + ENDC)
+    # list of choices to use in menu selection
     choices = ['break', 'list_movies', 'add_movie', 'delete_movie', 'update_movie', 'stats', 'random_movie',
-               'search_movie', 'sort_movies_by_rating', 'sort_movies_by_year', 'create_histogram'] # list of choices to use in menu selection
+               'search_movie', 'sort_movies_by_rating', 'sort_movies_by_year', 'create_histogram']
     while True:
-        choice = input(BLUE + "Menu:\n0. Quit\n1. List movies\n2. Add movie\n3. Delete movie\n4. Update movie\n5. Stats\n"
-                              "6. Random movie\n7. Search movie\n8. Movies sorted by rating\n9. Movies sorted by year\n10. Create Rating Histogram"
-                              "\n\nEnter choice (0-10): " + ENDC)
-        if choice == '0':
+        choice = input(BLUE + "Menu:\n0. Quit\n1. List movies\n2. Add movie\n3. Delete movie\n4. Update movie\n"
+                              "5. Stats\n6. Random movie\n7. Search movie\n8. Movies sorted by rating\n"
+                              "9. Movies sorted by year\n10. Create Rating Histogram\n\nEnter choice (0-10): " + ENDC)
+        choice = input_validation(choice)
+        if choice == 0:
             print(GREEN +"Bye!" + ENDC)
             break
         print("")
         if int(choice) not in range(11):
             print(RED + "Invalid choice\n" + ENDC)
-        else:
-            exec(f'{choices[int(choice)]}(movies)')     # using the function exec to avoid the 11 loops needed for menu selection
+        else:     # using the function exec to avoid the 11 loops needed for menu selection
+            exec(f'{choices[int(choice)]}(movies)')
             input(BLUE + "\nPress enter to continue" + ENDC)
 
 
