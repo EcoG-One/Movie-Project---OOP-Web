@@ -32,12 +32,11 @@ def get_movies():
     """
     try:
         with open('data.json', "r") as json_file:
-            movies = json_file.read()
+            movies = json.loads(json_file.read())
         json_file.close()
     except IOError as e:
         print(e)
     else:
-        print("Movies read successfully")
         return movies
 
 def save_movies(movies):
@@ -51,8 +50,6 @@ def save_movies(movies):
         json_file.close()
     except IOError as e:
         print(e)
-    else:
-        print("Movies saved successfully")
 
 
 
@@ -91,9 +88,6 @@ def update_movie(title, rating):
     and saves it. The function doesn't need to validate the input.
     """
     movies = get_movies()
-    if movies.get(title, 0) == 0:  # checks if movie exists
-        print(f"{RED}Movie {title} doesn't exist!{ENDC}")
-    else:
-        movies[title]["rating"] = rating
-        print(f'Movie {title} successfully updated')
+    movies[title]["rating"] = rating
+    save_movies(movies)
   

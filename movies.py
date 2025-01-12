@@ -2,6 +2,7 @@ import statistics
 import random
 import matplotlib.pyplot as plt
 from thefuzz import process
+import movie_storage
 
 # We define colors as global variables
 MAGENTA = '\033[95m'
@@ -12,52 +13,48 @@ RED = '\033[91m'
 ENDC = '\033[0m'
 
 
-def list_movies(movies):
+def list_movies():
     """
         Prints all the movies, along with their rating and their total.
     """
+    movies = movie_storage.get_movies()
     print(f'{len(movies)} movies in total')
     for movie, properties in movies.items():
-        print(f'{movie} ({properties["year_of_release"]}): {properties["rating"]}')
+        print(f'{movie} ({properties["year"]}): {properties["rating"]}')
 
-def add_movie(movies):
+def add_movie():
     """
-        Adds the movie name and properties that the user inputs
+    Adds the movie name and properties that the user inputs
     """
-    movie_title = input(GREEN + 'Enter new movie name: ')
-    if movie_title in movies:
-        print(f"Movie {movie_title} already exist!")
+    movies = movie_storage.get_movies()
+    title = input(GREEN + 'Enter new movie name: ')
+    if title in movies:
+        print(f"Movie {title} already exist!")
         return
-    movie_year_of_release = int(input('Enter new movie year: '))
-    movie_rating = float(input('Enter new movie rating (0-10): '))
-    movie_properties = {
-            "rating": movie_rating,
-            "year_of_release": movie_year_of_release
-            }
-    movies[movie_title] = movie_properties
-    print(f'Movie {movie_title} successfully added{ENDC}')
+    year = int(input('Enter new movie year: '))
+    rating = float(input('Enter new movie rating (0-10): '))
+    movie_storage.add_movie(title, year, rating)
+    print(f'Movie {title} successfully added{ENDC}')
 
-def delete_movie(movies):
+def delete_movie():
     """
         Deletes the movie that the user inputs
     """
-    movie_title = input(GREEN + 'Enter movie name to delete: ' + ENDC)
-    if movies.pop(movie_title, 0) == 0: #checks if movie exists
-        print(f"{RED}Movie {movie_title} doesn't exist!{ENDC}")
-    else:
-        print(f'Movie {movie_title} successfully deleted')
+    title = input(GREEN + 'Enter movie name to delete: ' + ENDC)
+    movie_storage.delete_movie(title)
 
-def update_movie(movies):
+def update_movie():
     """
         If the movie that the user entered exists, it updates the movie’s rating
     """
-    movie_title = input(GREEN + 'Enter movie name: ' + ENDC)
-    if movies.get(movie_title, 0) == 0:     #checks if movie exists
-        print(f"{RED}Movie {movie_title} doesn't exist!{ENDC}")
+    movies = movie_storage.get_movies()
+    title = input(GREEN + 'Enter movie name: ' + ENDC)
+    if movies.get(title, 0) == 0:     #checks if movie exists
+        print(f"{RED}Movie {title} doesn't exist!{ENDC}")
     else:
-        new_movie_rate = float(input(GREEN + "Enter new movie rating (0-10): " + ENDC))
-        movies[movie_title]["rating"] = new_movie_rate
-        print(f'Movie {movie_title} successfully updated')
+        rating = float(input(GREEN + "Enter new movie rating (0-10): " + ENDC))
+        if movie_storage.update_movie(title, rating):
+            print(f'Movie {title} successfully updated')
 
 
 def stats(movies):
@@ -150,59 +147,22 @@ def create_histogram(movies):
     plt.close
 
 def input_validation(num):
-  while True:
-    try:
-        num = int(num)
-    except ValueError:
-        num = input(f"{GREEN}'{num}'{RED} is not a Number. Please enter a Number (0 to 10): {ENDC}")
-    else:
-        return num
+    """
+    Validates if input string is an integer and returns it as an integer
+    :param num: string
+    :return: integer
+    """
+    while True:
+        try:
+            num = int(num)
+        except ValueError:
+            num = input(f"{GREEN}'{num}'{RED} is not a Number. Please enter a Number (0 to 10): {ENDC}")
+        else:
+            return num
 
 
 def main():
       # Dictionary of Dictionaries to store the movies and their properties
-    movies = {
-        "The Shawshank Redemption": {
-            "rating": 9.5,
-            "year_of_release": 1994
-        },
-        "Pulp Fiction":  {
-            "rating": 8.8,
-            "year_of_release": 1994
-        },
-        "The Room":  {
-            "rating": 3.6,
-            "year_of_release": 2003
-        },
-        "The Godfather":  {
-            "rating": 9.2,
-            "year_of_release": 1972
-        },
-        "The Godfather: Part II":  {
-            "rating": 9.0,
-            "year_of_release": 1974
-        },
-        "The Dark Knight":  {
-            "rating": 9.0,
-            "year_of_release": 2008
-        },
-        "12 Angry Men":  {
-            "rating": 9.0,
-            "year_of_release": 1957
-        },
-        "Everything Everywhere All At Once":  {
-            "rating": 7.8,
-            "year_of_release": 2022
-        },
-        "Forrest Gump":  {
-            "rating": 8.8,
-            "year_of_release": 1994
-        },
-        "Star Wars: Episode V":  {
-            "rating": 8.7,
-            "year_of_release": 1980
-        }
-    }
     print(MAGENTA + '\033[4m' + '********** My Movies Database **********\n' + ENDC)
     # list of choices to use in menu selection
     choices = ['break', 'list_movies', 'add_movie', 'delete_movie', 'update_movie', 'stats', 'random_movie',
@@ -219,7 +179,7 @@ def main():
         if int(choice) not in range(11):
             print(RED + "Invalid choice\n" + ENDC)
         else:     # using the function exec to avoid the 11 loops needed for menu selection
-            exec(f'{choices[int(choice)]}(movies)')
+            exec(f'{choices[int(choice)]}()')
             input(BLUE + "\nPress enter to continue" + ENDC)
 
 
