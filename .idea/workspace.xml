@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7810cd80-785f-4d47-9359-08e3c8a73330" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/movie_storage.py" beforeDir="false" afterPath="$PROJECT_DIR$/movie_storage.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/movies.py" beforeDir="false" afterPath="$PROJECT_DIR$/movies.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,6 +28,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Python.movie_storage.executor": "Run",
     "Python.movies.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
