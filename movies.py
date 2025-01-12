@@ -13,18 +13,21 @@ ENDC = '\033[0m'
 
 
 def list_movies(movies):
-    '''
+    """
         Prints all the movies, along with their rating and their total.
-    '''
+    """
     print(f'{len(movies)} movies in total')
     for movie, properties in movies.items():
         print(f'{movie} ({properties["year_of_release"]}): {properties["rating"]}')
 
 def add_movie(movies):
-    '''
+    """
         Adds the movie name and properties that the user inputs
-    '''
+    """
     movie_title = input(GREEN + 'Enter new movie name: ')
+    if movie_title in movies:
+        print(f"Movie {movie_title} already exist!")
+        return
     movie_year_of_release = int(input('Enter new movie year: '))
     movie_rating = float(input('Enter new movie rating (0-10): '))
     movie_properties = {
@@ -35,9 +38,9 @@ def add_movie(movies):
     print(f'Movie {movie_title} successfully added{ENDC}')
 
 def delete_movie(movies):
-    '''
+    """
         Deletes the movie that the user inputs
-    '''
+    """
     movie_title = input(GREEN + 'Enter movie name to delete: ' + ENDC)
     if movies.pop(movie_title, 0) == 0: #checks if movie exists
         print(f"{RED}Movie {movie_title} doesn't exist!{ENDC}")
@@ -45,9 +48,9 @@ def delete_movie(movies):
         print(f'Movie {movie_title} successfully deleted')
 
 def update_movie(movies):
-    '''
+    """
         If the movie that the user entered exists, it updates the movie’s rating
-    '''
+    """
     movie_title = input(GREEN + 'Enter movie name: ' + ENDC)
     if movies.get(movie_title, 0) == 0:     #checks if movie exists
         print(f"{RED}Movie {movie_title} doesn't exist!{ENDC}")
@@ -58,9 +61,9 @@ def update_movie(movies):
 
 
 def stats(movies):
-    '''
+    """
         Prints statistics about the movies in the database, (Average, Median, Best, Worst), using the statistics library
-    '''
+    """
     rate = []
     for properties in movies.values():
         rate.append(properties["rating"])
@@ -71,21 +74,21 @@ def stats(movies):
     print(f'Worst movie: {sorted_movies[0][0]}, {min(rate)}')
 
 def random_movie(movies):
-    '''
+    """
         Prints a random movie and it’s rating, using the random library
-    '''
+    """
     rand_movie = random.choice(list(movies.keys()))
     print(f"Your movie for tonight: {GREEN}{rand_movie}{ENDC}, it's rated {GREEN}{movies[rand_movie]['rating']}{ENDC}")
 
 def search_movie(movies):
-    '''
+    """
         Prints all the movies that matched the user’s query, along with the rating.
         If no movie is found, it uses fuzzy logic to suggest similar movies, using the thefuzz library
-    '''
+    """
     name = input(GREEN + "Enter part of movie name: " + ENDC)
     count = 0
     for movie_title in list(movies.keys()):
-        if name.lower() in movie_title.lower():   # search must be case insensitive
+        if name.lower() in movie_title.lower():   # search must be case-insensitive
             print(f'{movie_title}, {movies[movie_title]["rating"]}')
             count +=1
     if count == 0:
@@ -99,17 +102,17 @@ def search_movie(movies):
                 print(fuzzy_movie[0])   
 
 def sort_movies_by_rating(movies):
-    '''
-        Prints all the movies and their ratings, in a descending order by the rating
-    '''
+    """
+        Prints all the movies and their ratings, in descending order by the rating
+    """
     sorted_movies = sorted(movies.items(), key = lambda movie_rate : movie_rate[1]["rating"], reverse=True)
     for sorted_movie in sorted_movies:
         print(f'{sorted_movie[0]} ({sorted_movie[1]["year_of_release"]}): {sorted_movie[1]["rating"]}')
 
 def sort_movies_by_year(movies):
-    '''
-        Prints all the movies and their ratings, in a descending order by the rating
-    '''
+    """
+        Prints all the movies and their ratings, in descending order by the rating
+    """
     while True:
         choice = input(GREEN + "Do you want the latest movies first?  (Y/N) " + ENDC)
         if choice in ("Y", "y"):
@@ -126,9 +129,9 @@ def sort_movies_by_year(movies):
 
 
 def create_histogram(movies):
-    '''
-        Creates an histogram of the ratings of the movies, using the matplotlib library
-    '''
+    """
+        Creates a histogram of the ratings of the movies, using the matplotlib library
+    """
     rate = []
     for properties in movies.values():
         rate.append(properties["rating"])
