@@ -35,9 +35,22 @@ def get_movies():
             movies = json.loads(json_file.read())
         json_file.close()
     except IOError as e:
+        print(RED, end =" ")
         print(e)
-    else:
-        return movies
+        print(ENDC, end =" ")
+        print(GREEN + "Do you want to create empty 'data.json' file? \n"
+                                   "Y : Create 'data.json'\nN : Exit application " + ENDC)
+        while True:
+            choice = input('')
+            if choice in ("Y", "y"):
+                movies = {}
+                save_movies(movies)
+                return movies
+            elif choice in ("N", "n"):
+                exit()
+            else:
+                print(BLUE + 'Please enter "Y" or "N"' + ENDC)
+    return movies
 
 def save_movies(movies):
     """
@@ -75,10 +88,10 @@ def delete_movie(title):
     """
     movies = get_movies()
     if movies.pop(title, 0) == 0:  # checks if movie exists
-        print(f"{RED}Movie {title} doesn't exist!{ENDC}")
+        print(f"{RED}Movie '{title}' doesn't exist!{ENDC}")
     else:
         save_movies(movies)
-        print(f'Movie {title} successfully deleted')
+        print(f'{MAGENTA}Movie "{title}" successfully deleted{ENDC}')
 
 
 def update_movie(title, rating):

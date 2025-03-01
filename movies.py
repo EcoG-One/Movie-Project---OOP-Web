@@ -32,12 +32,12 @@ def add_movie():
         if title != '':
             break
     if title in movies:
-        print(f"Movie {title} already exist!")
+        print(f"{MAGENTA}Movie {title} already exist!{ENDC}")
         return
     year = int_validation(input('Enter new movie year: '))
     rating = float_validation(input('Enter new movie rating (0-10): '))
     movie_storage.add_movie(title, year, rating)
-    print(f'{MAGENTA}Movie {title} successfully added{ENDC}')
+    print(f'{MAGENTA}Movie "{title}" successfully added{ENDC}')
 
 def delete_movie():
     """
@@ -63,7 +63,7 @@ def update_movie():
     else:
         rating = float_validation(input(GREEN + "Enter new movie rating (0-10): " + ENDC))
         movie_storage.update_movie(title, rating)
-        print(f'Movie {title} successfully updated')
+        print(f'{MAGENTA}Movie "{title}" successfully updated{ENDC}')
 
 
 def stats():
@@ -71,11 +71,14 @@ def stats():
     Prints statistics about the movies in the database, (Average, Median, Best, Worst), using the statistics library
     """
     movies = movie_storage.get_movies()
+    if movies == {}:
+        print(RED + "No movies in database" + ENDC)
+        return
     rate = []
     for properties in movies.values():
         rate.append(properties["rating"])
-    print(f'Average rating: {statistics.mean(rate):.2f}')
-    print(f'Median rating: {statistics.median(rate)}')
+    print(f'Average rating: {statistics.mean(rate):.1f}')
+    print(f'Median rating: {statistics.median(rate):.1f}')
     sorted_movies = sorted(movies.items(), key = lambda movie_rate : movie_rate[1]["rating"])
     print(f'Best movie: {sorted_movies[-1][0]}, {max(rate)}')
     print(f'Worst movie: {sorted_movies[0][0]}, {min(rate)}')
@@ -85,6 +88,9 @@ def random_movie():
     Prints a random movie and it’s rating, using the random library
     """
     movies = movie_storage.get_movies()
+    if movies == {}:
+        print(RED + "No movies in database" + ENDC)
+        return
     rand_movie = random.choice(list(movies.keys()))
     print(f"Your movie for tonight: {GREEN}{rand_movie}{ENDC}, it's rated {GREEN}{movies[rand_movie]['rating']}{ENDC}")
 
@@ -94,6 +100,9 @@ def search_movie():
     If no movie is found, it uses fuzzy logic to suggest similar movies, using the thefuzz library
     """
     movies = movie_storage.get_movies()
+    if movies == {}:
+        print(RED + "No movies in database" + ENDC)
+        return
     name = input(GREEN + "Enter part of movie name: " + ENDC)
     count = 0
     for title in list(movies.keys()):
@@ -115,6 +124,9 @@ def sort_movies_by_rating():
     Prints all the movies and their ratings, in descending order by the rating
     """
     movies = movie_storage.get_movies()
+    if movies == {}:
+        print(RED + "No movies in database" + ENDC)
+        return
     sorted_movies = sorted(movies.items(), key = lambda movie_rate : movie_rate[1]["rating"], reverse=True)
     for sorted_movie in sorted_movies:
         print(f'{sorted_movie[0]} ({sorted_movie[1]["year"]}): {sorted_movie[1]["rating"]}')
@@ -124,6 +136,9 @@ def sort_movies_by_year():
     Prints all the movies and their ratings, in descending order by the rating
     """
     movies = movie_storage.get_movies()
+    if movies == {}:
+        print(RED + "No movies in database" + ENDC)
+        return
     while True:
         choice = input(GREEN + "Do you want the latest movies first?  (Y/N) " + ENDC)
         if choice in ("Y", "y"):
@@ -144,6 +159,9 @@ def create_histogram():
     Creates a histogram of the ratings of the movies, using the matplotlib library
     """
     movies = movie_storage.get_movies()
+    if movies == {}:
+        print(RED + "No movies in database" + ENDC)
+        return
     rate = []
     for properties in movies.values():
         rate.append(properties["rating"])
@@ -167,6 +185,9 @@ def filter_movies():
     Filters the list of movies based on minimum rating, start year and end year
     """
     movies = movie_storage.get_movies()
+    if movies == {}:
+        print(RED + "No movies in database" + ENDC)
+        return
     min_rate = input("Enter minimum rating (leave blank for no minimum rating): ")
     if min_rate != '':
         min_rate = float_enter_validation(min_rate)
@@ -253,28 +274,30 @@ def float_enter_validation(num):
         else:
             return num
 
+def bye_bye():
+    print(GREEN + "Bye!" + ENDC)
+    exit()
+
 
 def main():
     """
     main function, creates menu of choices and navigates to them
     """
     print(MAGENTA + '\033[4m' + '********** My Movies Database **********\n' + ENDC)
-    # list of choices to use in menu selection
-    choices = ['break', 'list_movies', 'add_movie', 'delete_movie', 'update_movie', 'stats', 'random_movie',
-               'search_movie', 'sort_movies_by_rating', 'sort_movies_by_year', 'create_histogram', 'filter_movies']
+    # Dictionary of choices to use in menu selection
+    choices = {0: bye_bye, 1: list_movies, 2: add_movie, 3: delete_movie, 4: update_movie, 5: stats, 6: random_movie,
+            7: search_movie, 8: sort_movies_by_rating, 9: sort_movies_by_year, 10: create_histogram, 11: filter_movies}
     while True:
         choice = input(BLUE + "Menu:\n0. Quit\n1. List movies\n2. Add movie\n3. Delete movie\n4. Update movie\n"
                               "5. Stats\n6. Random movie\n7. Search movie\n8. Movies sorted by rating\n"
-                              "9. Movies sorted by year\n10. Create Rating Histogram\n11. Filter Movies\n\nEnter choice (0-11): " + ENDC)
+                              "9. Movies sorted by year\n10. Create Rating Histogram\n11. Filter Movies\n\n"
+                              "Enter choice (0-11): " + ENDC)
         choice = int_validation(choice)
-        if choice == 0:
-            print(GREEN +"Bye!" + ENDC)
-            break
         print("")
-        if int(choice) not in range(12):
+        if choice not in range(12):
             print(RED + "Invalid choice\n" + ENDC)
-        else:     # using the function exec to avoid the 11 loops needed for menu selection
-            exec(f'{choices[int(choice)]}()')
+        else:
+            choices[choice]()
             input(BLUE + "\nPress enter to continue" + ENDC)
 
 
