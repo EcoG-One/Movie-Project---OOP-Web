@@ -69,14 +69,14 @@ class StorageCsv(IStorage):
             with open(self.file_path, "w") as csvfile:
                 csv_writer = csv.writer(csvfile)
                 for key, value in self.movies.items():
-                    movie = [key,value["rating"],value["year"]]
+                    movie = [key, value["rating"], value["year"], value["poster"]]
                     csv_writer.writerow(movie)
             csvfile.close()
         except IOError as e:
             print(e)
 
 
-    def add_movie(self, title, year, rating):
+    def add_movie(self, title, year, rating, poster):
         """
         Adds a movie to the movies database.
         Loads the information from the CSV file, add the movie,
@@ -85,7 +85,8 @@ class StorageCsv(IStorage):
         movies = self.list_movies()
         movies[title] = {
             "year": year,
-            "rating": rating
+            "rating": rating,
+            "poster":poster
         }
         self.save_movies(movies)
 

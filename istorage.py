@@ -8,7 +8,7 @@ class IStorage(ABC):
 
 
     @abstractmethod
-    def add_movie(self, title, year, rating):
+    def add_movie(self, title, year, rating, poster):
         pass
 
 

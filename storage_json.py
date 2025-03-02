@@ -69,7 +69,7 @@ class StorageJson(IStorage):
             print(e)
 
 
-    def add_movie(self, title, year, rating):
+    def add_movie(self, title, year, rating, poster):
         """
         Adds a movie to the movies database.
         Loads the information from the JSON file, add the movie,
@@ -78,7 +78,8 @@ class StorageJson(IStorage):
         movies = self.list_movies()
         movies[title] = {
             "year": year,
-            "rating": rating
+            "rating": rating,
+            "poster":poster
         }
         self.save_movies(movies)
 

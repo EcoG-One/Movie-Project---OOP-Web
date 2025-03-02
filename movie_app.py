@@ -2,7 +2,9 @@ import statistics
 import random
 import matplotlib.pyplot as plt
 from thefuzz import process
-
+import requests
+from dotenv import load_dotenv
+import os
 
 # We define colors as global variables
 MAGENTA = '\033[95m'
@@ -12,6 +14,7 @@ YELLOW = '\033[93m'
 RED = '\033[91m'
 ENDC = '\033[0m'
 
+load_dotenv()
 
 class MovieApp:
     def __init__(self, storage):
@@ -27,6 +30,7 @@ class MovieApp:
         for movie, properties in movies.items():
             print(f'{movie} ({properties["year"]}): {properties["rating"]}')
 
+
     def _command_add_movie(self):
         """
         Adds the movie name and properties that the user inputs
@@ -39,9 +43,14 @@ class MovieApp:
         if title in movies:
             print(f"{MAGENTA}Movie {title} already exist!{ENDC}")
             return
-        year = self.int_validation(input('Enter new movie year: '))
-        rating = self.float_validation(input('Enter new movie rating (0-10): '))
-        self._storage.add_movie(title, year, rating)
+        # year = self.int_validation(input('Enter new movie year: '))
+        # rating = self.float_validation(input('Enter new movie rating (0-10): '))
+        URL = 'http://www.omdbapi.com/?'
+        APIKEY = os.getenv('apikey')
+        param = {'apikey':APIKEY, 't':title}
+        movie_res = requests.get(URL, params=param)
+        movie_data = movie_res.json()
+        self._storage.add_movie(title, movie_data["Year"], movie_data["imdbRating"], movie_data["Poster"])
         print(f'{MAGENTA}Movie "{title}" successfully added{ENDC}')
 
 
@@ -54,6 +63,7 @@ class MovieApp:
             if title != '':
                 break
         self._storage.delete_movie(title)
+
 
     def _command_update_movie(self):
         """
@@ -71,6 +81,7 @@ class MovieApp:
                 input(GREEN + "Enter new movie rating (0-10): " + ENDC))
             self._storage.update_movie(title, rating)
             print(f'{MAGENTA}Movie "{title}" successfully updated{ENDC}')
+
 
     def _command_movie_stats(self):
         """
@@ -90,6 +101,7 @@ class MovieApp:
         print(f'Best movie: {sorted_movies[-1][0]}, {max(rate)}')
         print(f'Worst movie: {sorted_movies[0][0]}, {min(rate)}')
 
+
     def _command_random_movie(self):
         """
         Prints a random movie and it’s rating, using the random library
@@ -101,6 +113,7 @@ class MovieApp:
         rand_movie = random.choice(list(movies.keys()))
         print(
             f"Your movie for tonight: {GREEN}{rand_movie}{ENDC}, it's rated {GREEN}{movies[rand_movie]['rating']}{ENDC}")
+
 
     def _command_search_movie(self):
         """
@@ -130,6 +143,7 @@ class MovieApp:
                 for fuzzy_movie in closest_fuzzy_movies:
                     print(fuzzy_movie[0])
 
+
     def _command_sort_movies_by_rating(self):
         """
         Prints all the movies and their ratings, in descending order by the rating
@@ -144,6 +158,7 @@ class MovieApp:
         for sorted_movie in sorted_movies:
             print(
                 f'{sorted_movie[0]} ({sorted_movie[1]["year"]}): {sorted_movie[1]["rating"]}')
+
 
     def _command_sort_movies_by_year(self):
         """
@@ -171,6 +186,7 @@ class MovieApp:
             print(
                 f'{sorted_movie[0]} ({sorted_movie[1]["year"]}): {sorted_movie[1]["rating"]}')
 
+
     def _command_create_histogram(self):
         """
         Creates a histogram of the ratings of the movies, using the matplotlib library
@@ -196,6 +212,7 @@ class MovieApp:
             print(GREEN + "Histogram saved successfully." + ENDC)
         plt.show()  # we can comment out this line, if we don't want to display the histogram
         plt.close
+
 
     def _command_filter_movies(self):
         """
@@ -233,6 +250,7 @@ class MovieApp:
             print(
                 MAGENTA + "No movies found based on the provided criteria" + ENDC)
 
+
     def int_validation(self, num):
         """
         Validates if input string is an integer and returns it as an integer
@@ -247,6 +265,7 @@ class MovieApp:
                     f"{GREEN}'{num}'{RED} is not an Integer Number. Please enter an Integer: {ENDC}")
             else:
                 return num
+
 
     def int_enter_validation(self, num):
         """
@@ -265,6 +284,7 @@ class MovieApp:
             else:
                 return num
 
+
     def float_validation(self, num):
         """
         Validates if input string is a floating and returns it as a floating
@@ -279,6 +299,7 @@ class MovieApp:
                     f"{GREEN}'{num}'{RED} is not a Number. Please enter a Number (0 to 10): {ENDC}")
             else:
                 return num
+
 
     def float_enter_validation(self, num):
         """
@@ -297,6 +318,7 @@ class MovieApp:
             else:
                 return num
 
+
     def _generate_website(self):
         ...
 
@@ -305,12 +327,8 @@ class MovieApp:
         print(GREEN + "Bye!" + ENDC)
         exit()
 
-    def run(self):
-        ...
-        # Print menu
-        # Get use command
-        # Execute command
 
+    def run(self):
         """
         main function, creates menu of choices and navigates to them
         """
