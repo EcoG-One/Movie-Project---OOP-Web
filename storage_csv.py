@@ -1,5 +1,5 @@
 from istorage import IStorage
-import json
+import csv
 
 # We define colors as global variables
 MAGENTA = '\033[95m'
@@ -9,7 +9,7 @@ YELLOW = '\033[93m'
 RED = '\033[91m'
 ENDC = '\033[0m'
 
-class StorageJson(IStorage):
+class StorageCsv(IStorage):
     def __init__(self, file_path):
         self.file_path = file_path
 
@@ -19,7 +19,7 @@ class StorageJson(IStorage):
             Returns a dictionary of dictionaries that
             contains the movies information in the database.
 
-            The function loads the information from the JSON
+            The function loads the information from the CSV
             file and returns the data.
 
             For example, the function may return:
@@ -33,10 +33,14 @@ class StorageJson(IStorage):
               },
             }
             """
+        movies = {}
         try:
-            with open(self.file_path, "r") as json_file:
-                movies = json.loads(json_file.read())
-            json_file.close()
+            with open(self.file_path, "r") as csvfile:
+                csv_reader = csv.reader(csvfile)
+                for row in csv_reader:
+                    if len(row) == 3:
+                        movies[row[0]] = {"rating": row[1], "year": row[2]}
+            csvfile.close()
         except IOError as e:
             print(RED, end=" ")
             print(e)
@@ -58,13 +62,16 @@ class StorageJson(IStorage):
 
     def save_movies(self, movies):
         """
-        Gets all your movies as an argument and saves them to the JSON file.
+        Gets all your movies as an argument and saves them to the CSV file.
         """
-        dump_movies = json.dumps(movies)
+        self.movies = movies
         try:
-            with open(self.file_path, "w") as json_file:
-                json_file.write(dump_movies)
-            json_file.close()
+            with open(self.file_path, "w") as csvfile:
+                csv_writer = csv.writer(csvfile)
+                for key, value in self.movies.items():
+                    movie = [key,value["rating"],value["year"]]
+                    csv_writer.writerow(movie)
+            csvfile.close()
         except IOError as e:
             print(e)
 
@@ -72,7 +79,7 @@ class StorageJson(IStorage):
     def add_movie(self, title, year, rating):
         """
         Adds a movie to the movies database.
-        Loads the information from the JSON file, add the movie,
+        Loads the information from the CSV file, add the movie,
         and saves it. The function doesn't need to validate the input.
         """
         movies = self.list_movies()
@@ -86,7 +93,7 @@ class StorageJson(IStorage):
     def delete_movie(self, title):
         """
             Deletes a movie from the movies database.
-            Loads the information from the JSON file, deletes the movie,
+            Loads the information from the CSV file, deletes the movie,
             and saves it. The function doesn't need to validate the input.
             """
         movies = self.list_movies()
@@ -100,10 +107,11 @@ class StorageJson(IStorage):
     def update_movie(self, title, rating):
         """
             Updates a movie from the movies database.
-            Loads the information from the JSON file, updates the movie,
+            Loads the information from the CSV file, updates the movie,
             and saves it. The function doesn't need to validate the input.
             """
         movies = self.list_movies()
         movies[title]["rating"] = rating
         self.save_movies(movies)
+
 
