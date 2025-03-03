@@ -48,10 +48,17 @@ class MovieApp:
         URL = 'http://www.omdbapi.com/?'
         APIKEY = os.getenv('apikey')
         param = {'apikey':APIKEY, 't':title}
-        movie_res = requests.get(URL, params=param)
+        try:
+            movie_res = requests.get(URL, params=param)
+        except requests.exceptions.RequestException as e:
+            print(e)
+            return
         movie_data = movie_res.json()
-        self._storage.add_movie(title, movie_data["Year"], movie_data["imdbRating"], movie_data["Poster"])
-        print(f'{MAGENTA}Movie "{title}" successfully added{ENDC}')
+        if movie_data == {"Response":"False","Error":"Movie not found!"}:
+            print("Error: Movie not found!")
+        else:
+            self._storage.add_movie(title, movie_data["Year"], movie_data["imdbRating"], movie_data["Poster"])
+            print(f'{MAGENTA}Movie "{title}" successfully added{ENDC}')
 
 
     def _command_delete_movie(self):
@@ -318,9 +325,67 @@ class MovieApp:
             else:
                 return num
 
+    def serialize_movie(self, movie, properties):
+        '''
+        Serializes a movie object and outputs it as HTML
+        :param movie: Dictionary with all the movie properties
+        :return: the movie object as HTML
+        '''
+        output = ''
+        try:
+            output += (f'        <li>\n'
+                       f'          <div class="movie">\n'
+                       f'            <img class="movie-poster"'
+                       f'src={properties["poster"]} title=""/>\n          </div>\n'
+                       f'          <div class ="movie-title">{movie}</div>\n'
+                       f'          <div class ="movie-year">{properties["year"]}'
+                       f'</div>\n'
+                       f'        </li>\n'
+                       )
+        except (KeyError, IndexError):
+            pass
+        return output
 
-    def _generate_website(self):
-        ...
+
+    def read_data(self):
+        '''
+        Iterates through the objects of movies list, adding them
+            to the HTML using the serialize_movie() function
+        :param movies: List of Dictionaries with all our movies and
+            their properties
+        :return: all movies properties as HTML
+        '''
+        movies = self._storage.list_movies()
+        output = ''
+        for movie, properties in movies.items():
+            output += self.serialize_movie(movie, properties)
+        return output
+
+
+    def read_html(self):
+        '''
+        Reads the HTML template file
+        :return: the HTML template as string
+        '''
+        try:
+            with open("_static\index_template.html", "r") as html_template:
+                return html_template.read()
+        except IOError as e:
+            print(f'WARNING! {e}. Exiting...')
+            exit()
+
+
+    def _command_generate_website(self):
+
+        new_html = self.read_html().replace("__TEMPLATE_MOVIE_GRID__",
+                                       self.read_data())
+        try:
+            with open("_static\index.html", "w") as new_html_file:
+                new_html_file.write(new_html)
+            print("Website was generated successfully.")
+        except IOError as e:
+            print(f'WARNING! {e}. Exiting...')
+            exit()
 
 
     def _command_bye_bye(self):
@@ -339,16 +404,16 @@ class MovieApp:
                    4: self._command_update_movie, 5: self._command_movie_stats, 6: self._command_random_movie,
                    7: self._command_search_movie, 8: self._command_sort_movies_by_rating,
                    9: self._command_sort_movies_by_year, 10: self._command_create_histogram,
-                   11: self._command_filter_movies}
+                   11: self._command_filter_movies, 12: self._command_generate_website}
         while True:
             choice = input(
                 BLUE + "Menu:\n0. Quit\n1. List movies\n2. Add movie\n3. Delete movie\n4. Update movie\n"
                        "5. Stats\n6. Random movie\n7. Search movie\n8. Movies sorted by rating\n"
-                       "9. Movies sorted by year\n10. Create Rating Histogram\n11. Filter Movies\n\n"
-                       "Enter choice (0-11): " + ENDC)
+                       "9. Movies sorted by year\n10. Create Rating Histogram\n11. Filter Movies\n12. Generate Website\n\n"
+                       "Enter choice (0-12): " + ENDC)
             choice = self.int_validation(choice)
             print("")
-            if choice not in range(12):
+            if choice not in range(13):
                 print(RED + "Invalid choice\n" + ENDC)
             else:
                 choices[choice]()

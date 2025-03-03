@@ -38,8 +38,8 @@ class StorageCsv(IStorage):
             with open(self.file_path, "r") as csvfile:
                 csv_reader = csv.reader(csvfile)
                 for row in csv_reader:
-                    if len(row) == 3:
-                        movies[row[0]] = {"rating": row[1], "year": row[2]}
+                    if len(row) == 4:
+                        movies[row[0]] = {"rating": row[1], "year": row[2], "poster": row[3]}
             csvfile.close()
         except IOError as e:
             print(RED, end=" ")
