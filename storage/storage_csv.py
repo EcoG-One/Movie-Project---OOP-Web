@@ -1,4 +1,4 @@
-from istorage import IStorage
+from storage.istorage import IStorage
 import csv
 
 # We define colors as global variables
@@ -10,36 +10,28 @@ RED = '\033[91m'
 ENDC = '\033[0m'
 
 class StorageCsv(IStorage):
+
     def __init__(self, file_path):
         self.file_path = file_path
 
-
     def list_movies(self):
         """
-            Returns a dictionary of dictionaries that
-            contains the movies information in the database.
-
-            The function loads the information from the CSV
-            file and returns the data.
-
-            For example, the function may return:
-            {
-              "Titanic": {
-                "rating": 9,
-                "year": 1999
-              },
-              "..." {
-                ...
-              },
-            }
-            """
+        Returns a dictionary of dictionaries that
+        contains the movies information in the database.
+        The function loads the information from the CSV
+        file and returns the data.
+        """
         movies = {}
         try:
             with open(self.file_path, "r") as csvfile:
-                csv_reader = csv.reader(csvfile)
-                for row in csv_reader:
-                    if len(row) == 4:
-                        movies[row[0]] = {"rating": row[1], "year": row[2], "poster": row[3]}
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    title = row["title"]
+                    movies[title] = {
+                        "year": int(row["year"]),
+                        "rating": float(row["rating"]),
+                        "poster": row.get("poster", "N/A")
+                    }
             csvfile.close()
         except IOError as e:
             print(RED, end=" ")
@@ -59,22 +51,24 @@ class StorageCsv(IStorage):
                     print(BLUE + 'Please enter "Y" or "N"' + ENDC)
         return movies
 
-
     def save_movies(self, movies):
         """
         Gets all your movies as an argument and saves them to the CSV file.
         """
-        self.movies = movies
         try:
-            with open(self.file_path, "w") as csvfile:
-                csv_writer = csv.writer(csvfile)
-                for key, value in self.movies.items():
-                    movie = [key, value["rating"], value["year"], value["poster"]]
-                    csv_writer.writerow(movie)
+            with open(self.file_path, "w", newline="") as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=["title", "year", "rating", "poster"])
+                writer.writeheader()
+                for title, data in movies.items():
+                    writer.writerow({
+                        "title": title,
+                        "year": data["year"],
+                        "rating": data["rating"],
+                        "poster": data["poster"]
+                    })
             csvfile.close()
         except IOError as e:
             print(e)
-
 
     def add_movie(self, title, year, rating, poster):
         """
@@ -90,13 +84,12 @@ class StorageCsv(IStorage):
         }
         self.save_movies(movies)
 
-
     def delete_movie(self, title):
         """
-            Deletes a movie from the movies database.
-            Loads the information from the CSV file, deletes the movie,
-            and saves it. The function doesn't need to validate the input.
-            """
+        Deletes a movie from the movies database.
+        Loads the information from the CSV file, deletes the movie,
+        and saves it. The function doesn't need to validate the input.
+        """
         movies = self.list_movies()
         if movies.pop(title, 0) == 0:  # checks if movie exists
             print(f"{RED}Movie '{title}' doesn't exist!{ENDC}")
@@ -104,15 +97,12 @@ class StorageCsv(IStorage):
             self.save_movies(movies)
             print(f'{MAGENTA}Movie "{title}" successfully deleted{ENDC}')
 
-
     def update_movie(self, title, rating):
         """
-            Updates a movie from the movies database.
-            Loads the information from the CSV file, updates the movie,
-            and saves it. The function doesn't need to validate the input.
-            """
+        Updates a movie from the movies database.
+        Loads the information from the CSV file, updates the movie,
+        and saves it. The function doesn't need to validate the input.
+        """
         movies = self.list_movies()
         movies[title]["rating"] = rating
         self.save_movies(movies)
-
-
