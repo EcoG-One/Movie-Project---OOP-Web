@@ -1,0 +1,112 @@
+{
+    "Meet Joe Black": {
+        "year": 1998,
+        "rating": 7.2,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMjVjNjAwYWItMDc0ZC00MTEwLWJiN2MtM2U4YThjNWE5YTZmXkEyXkFqcGc@._V1_SX500.jpg"
+    },
+    "Blade Runner": {
+        "year": 1982,
+        "rating": 8.1,
+        "poster": "https://m.media-amazon.com/images/M/MV5BOWQ4YTBmNTQtMDYxMC00NGFjLTkwOGQtNzdhNmY1Nzc1MzUxXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Inception": {
+        "year": 2010,
+        "rating": 8.8,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg"
+    },
+    "Django Unchained": {
+        "year": 2012,
+        "rating": 8.5,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMjIyNTQ5NjQ1OV5BMl5BanBnXkFtZTcwODg1MDU4OA@@._V1_SX300.jpg"
+    },
+    "300": {
+        "year": 2006,
+        "rating": 7.6,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMjc4OTc0ODgwNV5BMl5BanBnXkFtZTcwNjM1ODE0MQ@@._V1_SX300.jpg"
+    },
+    "The Crow": {
+        "year": 1994,
+        "rating": 7.5,
+        "poster": "https://m.media-amazon.com/images/M/MV5BOTBiNzhkZTItZWUwZS00YTJkLTg0YTEtN2I0ZDI5ODI2MWFjXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Pulp Fiction": {
+        "year": 1994,
+        "rating": 8.9,
+        "poster": "https://m.media-amazon.com/images/M/MV5BYTViYTE3ZGQtNDBlMC00ZTAyLTkyODMtZGRiZDg0MjA2YThkXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "The Batman": {
+        "year": 2022,
+        "rating": 7.8,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "The Godfather": {
+        "year": 1972,
+        "rating": 9.2,
+        "poster": "https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Forrest Gump": {
+        "year": 1994,
+        "rating": 8.8,
+        "poster": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Star Wars: Episode V": {
+        "year": 1980,
+        "rating": 8.7,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMTkxNGFlNDktZmJkNC00MDdhLTg0MTEtZjZiYWI3MGE5NWIwXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Fight Club": {
+        "year": 1999,
+        "rating": 8.8,
+        "poster": "https://m.media-amazon.com/images/M/MV5BOTgyOGQ1NDItNGU3Ny00MjU3LTg2YWEtNmEyYjBiMjI1Y2M5XkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "The Da Vinci Code": {
+        "year": 2006,
+        "rating": 6.6,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMjIxMjQyMTc3Nl5BMl5BanBnXkFtZTcwMTA1MDUzMw@@._V1_SX300.jpg"
+    },
+    "Jackie Brown": {
+        "year": 1997,
+        "rating": 7.5,
+        "poster": "https://m.media-amazon.com/images/M/MV5BZmUxZjY3MDktNGI5NS00MTQ5LWE0YWItZWQzNmZhNjhkZDYyXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "The Last Unicorn": {
+        "year": 1982,
+        "rating": 7.3,
+        "poster": "https://m.media-amazon.com/images/M/MV5BNTBlOWQyMjYtMjUyYS00MWQ0LTgyYzEtYjZmNWE0ODYwZTg2XkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "The Addams Family": {
+        "year": 1991,
+        "rating": 6.9,
+        "poster": "https://m.media-amazon.com/images/M/MV5BZWY0MzVlNGEtYzM1MC00OTI4LWE3ZTQtNWJjYzk2Y2MyNjVkXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Sin City": {
+        "year": 2005,
+        "rating": 8.0,
+        "poster": "https://m.media-amazon.com/images/M/MV5BNWE2YmYyYzQtNGMwMi00Yzk0LTk3ZTYtYTcxNmFjMDE1MGExXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Sin City: A Dame to Kill For": {
+        "year": 2014,
+        "rating": 6.5,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMjA5ODYwNjgxMF5BMl5BanBnXkFtZTgwMTcwNzAyMjE@._V1_SX300.jpg"
+    },
+    "The Dark Knight": {
+        "year": 2008,
+        "rating": 9.0,
+        "poster": "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg"
+    },
+    "Joker": {
+        "year": 2019,
+        "rating": 8.3,
+        "poster": "https://m.media-amazon.com/images/M/MV5BNzY3OWQ5NDktNWQ2OC00ZjdlLThkMmItMDhhNDk3NTFiZGU4XkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Kill Bill": {
+        "year": 2003,
+        "rating": 8.2,
+        "poster": "https://m.media-amazon.com/images/M/MV5BZmMyYzJlZmYtY2I3NC00NjAyLTkyZWItZjdjZDI1YTYyYTEwXkEyXkFqcGc@._V1_SX300.jpg"
+    },
+    "Kill Bill: Volume 2": {
+        "year": 2004,
+        "rating": 7.2,
+        "poster": "https://m.media-amazon.com/images/M/MV5BZmRhZGU5YjMtOGFjNi00NDk2LWE2OWQtMGQ2OTU5YTE0MTU1XkEyXkFqcGc@._V1_SX300.jpg"
+    }
+}
