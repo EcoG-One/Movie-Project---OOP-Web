@@ -57,8 +57,8 @@ class MovieApp:
         else:
             try:
                 self._storage.add_movie(title,
-                            int(movie_data.get("Year", 1900)),
-                            float(movie_data.get("imdbRating", 0)),
+                            int(movie_data.get("Year")),
+                            float(movie_data.get("imdbRating")),
                             movie_data.get("Poster", "N/A"))
                 print(f'{MAGENTA}Movie "{title}" successfully added{ENDC}')
             except ValueError:
@@ -305,7 +305,7 @@ class MovieApp:
 
     def float_validation(self, num):
         """
-        Validates if input string is a floating
+        Validates if input string is a floating between 0 - 10
         and returns it as a floating
         :param num: string
         :return: floating number
@@ -313,16 +313,18 @@ class MovieApp:
         while True:
             try:
                 num = float(num)
-                if num > 10:
-                    num = 10
-                    print(f"{MAGENTA}You entered a Number grater than 10. "
-                          f"Your new rating will be 10.{ENDC}")
             except ValueError:
                 num = input(
                     f"{GREEN}'{num}'{RED} is not a Number. "
                     f"Please enter a Number (0 to 10): {ENDC}")
             else:
-                return num
+                while True:
+                    if 0<= num <= 10:
+                        if num == -0.0:
+                            num = 0
+                        return num
+                    num = input(f"Please enter a Number from 0 to 10: {ENDC}")
+                    num = self.float_validation(num)
 
     def float_enter_validation(self, num):
         """
@@ -341,6 +343,7 @@ class MovieApp:
                     f"{GREEN}'{num}'{RED} is not a Number. "
                     f"Please enter a Number: {ENDC}")
             else:
+         #       if num < 0: num = ''
                 return num
 
     def serialize_movie(self, movie, properties):
@@ -388,23 +391,24 @@ class MovieApp:
             with open("_static\index_template.html", "r") as html_template:
                 return html_template.read()
         except IOError as e:
-            print(f'WARNING! {e}. Exiting...')
-            exit()
+            print(f'WARNING! Website not Generated. {e}.')
 
     def _command_generate_website(self):
         '''
         Generates the website according to the template,
         and creates a file called index.html that has the full website
         '''
-        new_html = self.read_html().replace("__TEMPLATE_MOVIE_GRID__",
+        if  self.read_html() is not None:
+            new_html = self.read_html().replace("__TEMPLATE_MOVIE_GRID__",
                                        self.read_data())
+        else:
+            return
         try:
             with open("_static\index.html", "w") as new_html_file:
                 new_html_file.write(new_html)
             print("Website was generated successfully.")
         except IOError as e:
-            print(f'WARNING! {e}. Exiting...')
-            exit()
+            print(f'WARNING! Website not Generated. {e}.')
 
     def _command_bye_bye(self):
         '''
